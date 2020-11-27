@@ -57,9 +57,6 @@ namespace cad_dev_winforms
         private int YMaximum = 15;
         private float commonScaleFactor = 1;
 
-        //private float offsetX = 0;
-        //private float offsetY = 0;
-
         private float m_xRotate = 0.0f;
         private float m_yRotate = 0.0f;
 
@@ -100,16 +97,12 @@ namespace cad_dev_winforms
             gl.Flush();
         }
 
-
         private bool moving = false;
         private bool rotating = false;
-
         private int pressedX = 0;
         private int pressedY = 0;
-
         private float pressedShiftX = 0;
         private float pressedShiftY = 0;
-
         private void openGLControl_MouseDown(object sender, MouseEventArgs e)
         {
             this.pressedX = e.X;
@@ -118,28 +111,23 @@ namespace cad_dev_winforms
             if (e.Button == MouseButtons.Right) { moving = true; }
             if (e.Button == MouseButtons.Left) { rotating = true; }
         }
-
         private void openGLControl_MouseMove(object sender, MouseEventArgs e)
         {
             float deltaX = pressedX - e.X;
             float deltaY = pressedY - e.Y;
-
             if (moving)
             {
                 pressedShiftX = pressedShiftX - deltaX;
                 pressedShiftY = pressedShiftY + deltaY;
             }
-
             if (rotating)
             {
                 m_xRotate -= deltaY / 2;
                 m_yRotate -= deltaX / 2;
             }
-
             this.pressedX = e.X;
             this.pressedY = e.Y;
         }
-
         private void openGLControl_MouseUp(object sender, MouseEventArgs e)
         {
             moving = false;

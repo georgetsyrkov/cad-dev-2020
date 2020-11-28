@@ -30,7 +30,9 @@ namespace cad_dev_winforms
         private void InitializeComponent()
         {
             this.openGLControl = new SharpGL.OpenGLControl();
-            this.buttonTest = new System.Windows.Forms.Button();
+            this.buttonReset = new System.Windows.Forms.Button();
+            this.buttonPrimitives = new System.Windows.Forms.Button();
+            this.buttonSTL = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.openGLControl)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,21 +53,44 @@ namespace cad_dev_winforms
             this.openGLControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.openGLControl_MouseMove);
             this.openGLControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.openGLControl_MouseUp);
             // 
-            // buttonTest
+            // buttonReset
             // 
-            this.buttonTest.Location = new System.Drawing.Point(12, 12);
-            this.buttonTest.Name = "buttonTest";
-            this.buttonTest.Size = new System.Drawing.Size(75, 23);
-            this.buttonTest.TabIndex = 1;
-            this.buttonTest.Text = "test";
-            this.buttonTest.UseVisualStyleBackColor = true;
+            this.buttonReset.Location = new System.Drawing.Point(12, 12);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(75, 23);
+            this.buttonReset.TabIndex = 1;
+            this.buttonReset.Text = "Сброс";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
+            // 
+            // buttonPrimitives
+            // 
+            this.buttonPrimitives.Location = new System.Drawing.Point(121, 12);
+            this.buttonPrimitives.Name = "buttonPrimitives";
+            this.buttonPrimitives.Size = new System.Drawing.Size(75, 23);
+            this.buttonPrimitives.TabIndex = 2;
+            this.buttonPrimitives.Text = "Примитивы";
+            this.buttonPrimitives.UseVisualStyleBackColor = true;
+            this.buttonPrimitives.Click += new System.EventHandler(this.buttonPrimitives_Click);
+            // 
+            // buttonSTL
+            // 
+            this.buttonSTL.Location = new System.Drawing.Point(202, 12);
+            this.buttonSTL.Name = "buttonSTL";
+            this.buttonSTL.Size = new System.Drawing.Size(75, 23);
+            this.buttonSTL.TabIndex = 3;
+            this.buttonSTL.Text = "STL";
+            this.buttonSTL.UseVisualStyleBackColor = true;
+            this.buttonSTL.Click += new System.EventHandler(this.buttonSTL_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.buttonTest);
+            this.Controls.Add(this.buttonSTL);
+            this.Controls.Add(this.buttonPrimitives);
+            this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.openGLControl);
             this.Name = "MainForm";
             this.Text = "CAD Development";
@@ -77,7 +102,9 @@ namespace cad_dev_winforms
         #endregion
 
         private SharpGL.OpenGLControl openGLControl;
-        private System.Windows.Forms.Button buttonTest;
+        private System.Windows.Forms.Button buttonReset;
+        private System.Windows.Forms.Button buttonPrimitives;
+        private System.Windows.Forms.Button buttonSTL;
     }
 }
 

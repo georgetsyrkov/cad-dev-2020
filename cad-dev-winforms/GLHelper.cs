@@ -27,6 +27,18 @@ namespace cad_dev_winforms
             if (useOwnBegin) { gl.End(); }
         }
 
+        public static void DrawBackground(OpenGL gl)
+        {
+            gl.Begin(SharpGL.Enumerations.BeginMode.Polygon);
+            gl.Color(0.9f, 0.9f, 1.0f);
+            gl.Vertex(-1000,  700, -700);
+            gl.Vertex(1000,   700, -700);
+            gl.Color(0.0f, 0.3f, 1.0f);
+            gl.Vertex(1000,  -2000, -700);
+            gl.Vertex(-1000, -2000, -700);
+            gl.End();
+        }
+
         public static void DrawAxis3D(SharpGL.OpenGL gl, bool invertY, bool invertZ,
                                                float offsetX, float offsetY, float offsetZ,
                                                float commonScaleFactor,
@@ -107,7 +119,7 @@ namespace cad_dev_winforms
                     gl.PushMatrix();
 
                     float XAxislabelPosX = maxXvalue + offsetX - capSize;
-                    float XAxislabelPosY = offsetY - (capSize * 2);
+                    float XAxislabelPosY = offsetY - (capSize * 4);
 
                     gl.Translate(XAxislabelPosX, 0, 0);
                     gl.Translate(0, XAxislabelPosY, 0);
@@ -143,7 +155,7 @@ namespace cad_dev_winforms
                     gl.PushMatrix();
 
                     float ZAxislabelPosX = maxXvalue + offsetX + (capSize / 2);
-                    float ZAxislabelPosY = offsetY - (capSize * 2);
+                    float ZAxislabelPosY = offsetY - (capSize * 4);
 
                     if (invertZ) { ZAxislabelPosX = -ZAxislabelPosX; }
 

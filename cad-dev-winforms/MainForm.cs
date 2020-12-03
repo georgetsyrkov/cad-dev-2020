@@ -17,6 +17,7 @@ namespace cad_dev_winforms
         private float commonScaleFactor = 3;
         private bool moving = false;
         private bool rotating = false;
+        private bool zooming = false;
         private int pressedX = 0;
         private int pressedY = 0;
         private float pressedShiftX = 0;
@@ -33,19 +34,25 @@ namespace cad_dev_winforms
 
             this.openGLControl.DrawFPS = true;
 
-            this.openGLControl.OpenGLInitialized += OpenGLControl_OpenGLInitialized;
-            this.openGLControl.Resized += OpenGLControl_Resized;
-            this.openGLControl.OpenGLDraw += OpenGLControl_OpenGLDraw;
+            this.openGLControl.OpenGLInitialized += OpenGLControl_OpenGLInitialized; //
+            this.openGLControl.Resized += OpenGLControl_Resized;                     // "подписка" на основные события компоненты отрисовки OpenGL графики
+            this.openGLControl.OpenGLDraw += OpenGLControl_OpenGLDraw;               //
 
             this.Size = new Size(800, 600);
         }
 
+        // Метод первоначальной инициализации
+        //
+        //
         private void OpenGLControl_OpenGLInitialized(object sender, EventArgs e)
         {
             OpenGL gl = openGLControl.OpenGL;
             gl.ShadeModel(SharpGL.Enumerations.ShadeModel.Smooth);
         }
 
+        // Событие после изменения размера окна придожения,
+        // меняются пропорции площади отрисовки, 
+        // поэтому необходимо вносить корректировки в перспективу
         private void OpenGLControl_Resized(object sender, EventArgs e)
         {
             OpenGL gl = openGLControl.OpenGL;
@@ -56,6 +63,9 @@ namespace cad_dev_winforms
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
         }
 
+        // Самый главный метод, который запускается по событию отрисовки каждого кадра
+        //
+        //
         private void OpenGLControl_OpenGLDraw(object sender, RenderEventArgs args)
         {
             OpenGL gl = openGLControl.OpenGL;
@@ -63,51 +73,58 @@ namespace cad_dev_winforms
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
 
+            // Рисуем фон
             GLHelper.DrawBackground(gl);
 
-            gl.LineWidth(1.0f);
-            gl.PointSize(2.0f);
-
-            gl.Color(0.3f, 0.3f, 0.3f, 1);
-
+            // Перемещаем координаты общей системы координат
             gl.Translate(0, -100 / 5, 0);
             gl.Translate(pressedShiftX / 7, pressedShiftY / 7, 0);
 
+            // Изменяем масштаб всего
             gl.Scale(commonScaleFactor, commonScaleFactor, commonScaleFactor);
 
+            // Вращение общей системы координат
             gl.Rotate(m_xRotate, 1.0f, 0.0f, 0.0f);
             gl.Rotate(m_yRotate, 0.0f, 1.0f, 0.0f);
 
-            float cap_size = (float)(AxisLength * 0.03);
 
+            // Устанавливаем цвет линий
+            gl.Color(0.3f, 0.3f, 0.3f, 1);
+
+            // Отрисовка системы координат
             GLHelper.DrawAxis3D(gl, false, false,
                                     0, 0, 0,
                                     (float)(commonScaleFactor * 0.5),
                                     0, (float)AxisLength,
                                     0, (float)AxisLength,
                                     0, (float)AxisLength,
-                                    2, cap_size,
+                                    2, (float)(AxisLength * 0.03),
                                     true,
                                     true, "ОСЬ X",
                                     true, "ОСЬ Y",
                                     true, "ОСЬ Z");
 
+            
             gl.Color(1f, 0.0f, 0.0f, 1);
 
             if (DrawTask1)
             {
-                
+                // Место кода для отрисовки первого задания
+                // ...
+                //
             }
 
             if (DrawTask2)
             {
-
+                // Место кода для отрисовки второго задания
+                // ...
+                //
             }
 
             gl.Flush();
         }
 
-
+        #region Методы обработки событий манипулятора "мышь"
         private void openGLControl_MouseDown(object sender, MouseEventArgs e)
         {
             this.pressedX = e.X;
@@ -115,6 +132,7 @@ namespace cad_dev_winforms
 
             if (e.Button == MouseButtons.Right) { moving = true; }
             if (e.Button == MouseButtons.Left) { rotating = true; }
+            if (e.Button == MouseButtons.Middle) { zooming = true; }
         }
 
         private void openGLControl_MouseMove(object sender, MouseEventArgs e)
@@ -131,6 +149,10 @@ namespace cad_dev_winforms
                 m_xRotate -= deltaY / 2;
                 m_yRotate -= deltaX / 2;
             }
+            if (zooming)
+            {
+                commonScaleFactor += deltaY * 0.01f;
+            }
             this.pressedX = e.X;
             this.pressedY = e.Y;
         }
@@ -139,10 +161,11 @@ namespace cad_dev_winforms
         {
             moving = false;
             rotating = false;
+            zooming = false;
         }
+        #endregion
 
-
-
+        #region Включение/отключение отрисовки заданий
         private void buttonReset_Click(object sender, EventArgs e)
         {
             this.DrawTask1 = false;
@@ -158,5 +181,6 @@ namespace cad_dev_winforms
         {
             this.DrawTask2 = true;
         }
+        #endregion
     }
 }

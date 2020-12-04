@@ -104,7 +104,7 @@ namespace cad_dev_winforms
                                     true, "ОСЬ Y",
                                     true, "ОСЬ Z");
 
-            
+
             gl.Color(1f, 0.0f, 0.0f, 1);
 
             if (DrawTask1)
@@ -112,6 +112,302 @@ namespace cad_dev_winforms
                 // Место кода для отрисовки первого задания
                 // ...
                 //
+
+                bool lines = true; bool polygons = true;
+
+
+                #region cylinder
+                int ng = 24; int radius = 10; int length = 60;
+
+                if (ng > 127) { ng = 127; }
+                double[,] vert = new double[128, 2];
+
+                int c = 0;
+                for (int i = 0; i < ng + 1; i++)
+                {
+                    double seta = (double)i * 360.0 / ng;
+                    double vx = Math.Sin((Math.PI * seta / 180.0)) * radius;
+                    double vy = Math.Cos((Math.PI * seta / 180.0)) * radius;
+                    vert[c, 0] = vx; vert[c, 1] = vy;
+                    c += 1;
+                }
+
+                if (lines)
+                {
+                    gl.Color(0.5f, 0.5f, 0.5f);
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    for (int i = 0; i < ng; i++)
+                    {
+                        gl.Vertex(0, vert[i, 0], vert[i, 1]);
+                        gl.Vertex(length, vert[i, 0], vert[i, 1]);
+                        gl.Vertex(length, vert[i + 1, 0], vert[i + 1, 1]);
+                        gl.Vertex(0, vert[i + 1, 0], vert[i + 1, 1]);
+                    }
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    for (int i = 0; i < ng; i++) { gl.Vertex(length, vert[i, 0], vert[i, 1]); }
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    for (int i = 0; i < ng; i++) { gl.Vertex(0, vert[i, 0], vert[i, 1]); }
+                    gl.End();
+                }
+
+                if (polygons)
+                {
+                    gl.Color(0.7f, 0.8f, 0.9f);
+                    gl.Begin(OpenGL.GL_QUADS);
+                    for (int i = 0; i < ng; i++)
+                    {
+                        gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(0, vert[i, 0], vert[i, 1]);
+                        gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(length, vert[i, 0], vert[i, 1]);
+                        gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(length, vert[i + 1, 0], vert[i + 1, 1]);
+                        gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(0, vert[i + 1, 0], vert[i + 1, 1]);
+                    }
+                    gl.End();
+
+                    gl.Color(0.7f, 0.8f, 0.9f);
+                    gl.Begin(OpenGL.GL_POLYGON);
+                    for (int i = 0; i < ng; i++) { gl.Vertex(0, vert[i, 0], vert[i, 1]); }
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_POLYGON);
+                    for (int i = ng - 1; i >= 0; i--) { gl.Vertex(length, vert[i, 0], vert[i, 1]); }
+                    gl.End();
+                }
+                #endregion
+
+                gl.Translate(0, 25, 0);
+
+                #region konus
+                int kon_ng = 32; int kon_radius1 = 10; int kon_radius2 = 5; int kon_length = 30;
+
+                if (kon_ng > 127) { kon_ng = 127; }
+                double[,] kon_vert1 = new double[128, 2];
+                double[,] kon_vert2 = new double[128, 2];
+
+                int cc = 0;
+                for (int i = 0; i < kon_ng + 1; i++)
+                {
+                    double seta = (double)i * 360.0 / kon_ng;
+
+                    double v1x = Math.Sin((Math.PI * seta / 180.0)) * kon_radius1;
+                    double v1y = Math.Cos((Math.PI * seta / 180.0)) * kon_radius1;
+                    kon_vert1[cc, 0] = v1x; kon_vert1[cc, 1] = v1y;
+
+                    double v2x = Math.Sin((Math.PI * seta / 180.0)) * kon_radius2;
+                    double v2y = Math.Cos((Math.PI * seta / 180.0)) * kon_radius2;
+                    kon_vert2[cc, 0] = v2x; kon_vert2[cc, 1] = v2y;
+
+                    cc += 1;
+                }
+
+                if (lines)
+                {
+                    gl.Color(0.5f, 0.5f, 0.5f);
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    for (int i = 0; i < kon_ng; i++)
+                    {
+                        gl.Vertex(0, kon_vert1[i, 0], kon_vert1[i, 1]);
+                        gl.Vertex(kon_length, kon_vert2[i, 0], kon_vert2[i, 1]);
+                        gl.Vertex(kon_length, kon_vert2[i + 1, 0], kon_vert2[i + 1, 1]);
+                        gl.Vertex(0, kon_vert1[i + 1, 0], kon_vert1[i + 1, 1]);
+                    }
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    for (int i = 0; i < kon_ng; i++) { gl.Vertex(0, kon_vert1[i, 0], kon_vert1[i, 1]); }
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    for (int i = 0; i < kon_ng; i++) { gl.Vertex(kon_length, kon_vert2[i, 0], kon_vert2[i, 1]); }
+                    gl.End();
+                }
+
+                if (polygons)
+                {
+                    gl.Color(0.7f, 0.8f, 0.9f);
+                    gl.Begin(OpenGL.GL_QUADS);
+                    for (int i = 0; i < kon_ng; i++)
+                    {
+                        gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(0, kon_vert1[i, 0], kon_vert1[i, 1]);
+                        gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(kon_length, kon_vert2[i, 0], kon_vert2[i, 1]);
+                        gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(kon_length, kon_vert2[i + 1, 0], kon_vert2[i + 1, 1]);
+                        gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(0, kon_vert1[i + 1, 0], kon_vert1[i + 1, 1]);
+                    }
+                    gl.End();
+
+                    gl.Color(0.7f, 0.8f, 0.9f);
+                    gl.Begin(OpenGL.GL_POLYGON);
+                    for (int i = 0; i < kon_ng; i++) { gl.Vertex(0, kon_vert1[i, 0], kon_vert1[i, 1]); }
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_POLYGON);
+                    for (int i = kon_ng - 1; i >= 0; i--) { gl.Vertex(kon_length, kon_vert2[i, 0], kon_vert2[i, 1]); }
+                    gl.End();
+                }
+                #endregion
+
+                gl.Translate(0, 25, 0);
+
+                #region paral
+                int lengthX = 5; int lengthY = 20; int lengthZ = 10;
+                if (polygons)
+                {
+                    gl.Begin(OpenGL.GL_QUADS);
+                    gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(0, lengthY / 2, lengthZ / 2);
+                    gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(0, -lengthY / 2, lengthZ / 2);
+                    gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(0, -lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(0, lengthY / 2, -lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_QUADS);
+                    gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(lengthX, lengthY / 2, lengthZ / 2);
+                    gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(lengthX, lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(lengthX, -lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(lengthX, -lengthY / 2, lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_QUADS);
+                    gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(0, lengthY / 2, lengthZ / 2);
+                    gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(lengthX, lengthY / 2, lengthZ / 2);
+                    gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(lengthX, -lengthY / 2, lengthZ / 2);
+                    gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(0, -lengthY / 2, lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_QUADS);
+                    gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(lengthX, lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(0, lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(0, -lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(lengthX, -lengthY / 2, -lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_QUADS);
+                    gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(0, lengthY / 2, lengthZ / 2);
+                    gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(0, lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(lengthX, lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(lengthX, lengthY / 2, lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_QUADS);
+                    gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(0, -lengthY / 2, lengthZ / 2);
+                    gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(lengthX, -lengthY / 2, lengthZ / 2);
+                    gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(lengthX, -lengthY / 2, -lengthZ / 2);
+                    gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(0, -lengthY / 2, -lengthZ / 2);
+                    gl.End();
+                }
+
+                if (lines)
+                {
+                    gl.Color(0.5f, 0.5f, 0.5f);
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    gl.Vertex(0, lengthY / 2, lengthZ / 2);
+                    gl.Vertex(0, lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(0, -lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(0, -lengthY / 2, lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    gl.Vertex(lengthX, lengthY / 2, lengthZ / 2);
+                    gl.Vertex(lengthX, lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(lengthX, -lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(lengthX, -lengthY / 2, lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    gl.Vertex(0, lengthY / 2, lengthZ / 2);
+                    gl.Vertex(lengthX, lengthY / 2, lengthZ / 2);
+                    gl.Vertex(lengthX, -lengthY / 2, lengthZ / 2);
+                    gl.Vertex(0, -lengthY / 2, lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    gl.Vertex(0, lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(lengthX, lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(lengthX, -lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(0, -lengthY / 2, -lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    gl.Vertex(0, lengthY / 2, lengthZ / 2);
+                    gl.Vertex(lengthX, lengthY / 2, lengthZ / 2);
+                    gl.Vertex(lengthX, lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(0, lengthY / 2, -lengthZ / 2);
+                    gl.End();
+
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    gl.Vertex(0, -lengthY / 2, lengthZ / 2);
+                    gl.Vertex(lengthX, -lengthY / 2, lengthZ / 2);
+                    gl.Vertex(lengthX, -lengthY / 2, -lengthZ / 2);
+                    gl.Vertex(0, -lengthY / 2, -lengthZ / 2);
+                    gl.End();
+                }
+                #endregion
+
+                gl.Translate(0, 25, 0);
+
+                #region sphere
+
+                int sph_ng = 24; float sph_radius = 10;
+
+                List<double[,]> slices = new List<double[,]>();
+
+                double dPhi = 2 * Math.PI / sph_ng;
+                double dPsi = 2 * Math.PI / sph_ng;
+                for (int i = 0; i <= sph_ng; i++)
+                {
+                    double[,] slice = new double[sph_ng + 1, 3];
+
+                    double Psi = -Math.PI + dPsi * i;
+
+                    for (int j = 0; j <= sph_ng; ++j)
+                    {
+                        double Phi = dPhi * j;
+
+                        double x = (sph_radius * Math.Cos(Phi));
+                        double y = (sph_radius * Math.Sin(Phi)) * Math.Sin(Psi);
+                        double z = (sph_radius * Math.Sin(Phi)) * Math.Cos(Psi);
+                        slice[j, 0] = x; slice[j, 1] = y; slice[j, 2] = z;
+                    }
+                    slices.Add(slice);
+                }
+
+                if (lines)
+                {
+                    gl.Color(0.5f, 0.5f, 0.5f);
+                    gl.Begin(OpenGL.GL_LINE_LOOP);
+                    for (int i = 0; i < slices.Count - 1; i++)
+                    {
+                        for (int j = 0; j < sph_ng; ++j)
+                        {
+                            gl.Vertex(slices[i][j, 0], slices[i][j, 1], slices[i][j, 2]);
+                            gl.Vertex(slices[i + 1][j, 0], slices[i + 1][j, 1], slices[i + 1][j, 2]);
+                            gl.Vertex(slices[i + 1][j + 1, 0], slices[i + 1][j + 1, 1], slices[i + 1][j + 1, 2]);
+                            gl.Vertex(slices[i][j + 1, 0], slices[i][j + 1, 1], slices[i][j + 1, 2]);
+                        }
+                    }
+                    gl.End();
+                }
+
+                if (polygons)
+                {
+                    gl.Color(0.7f, 0.8f, 0.9f);
+                    gl.Begin(OpenGL.GL_QUADS);
+                    for (int i = 0; i < slices.Count - 1; i++)
+                    {
+                        for (int j = 0; j < sph_ng; ++j)
+                        {
+                            gl.Color(0.71f, 0.81f, 0.91f); gl.Vertex(slices[i][j, 0], slices[i][j, 1], slices[i][j, 2]);
+                            gl.Color(0.73f, 0.83f, 0.93f); gl.Vertex(slices[i + 1][j, 0], slices[i + 1][j, 1], slices[i + 1][j, 2]);
+                            gl.Color(0.76f, 0.86f, 0.96f); gl.Vertex(slices[i + 1][j + 1, 0], slices[i + 1][j + 1, 1], slices[i + 1][j + 1, 2]);
+                            gl.Color(0.79f, 0.89f, 0.99f); gl.Vertex(slices[i][j + 1, 0], slices[i][j + 1, 1], slices[i][j + 1, 2]);
+                        }
+                    }
+                    gl.End();
+                }
+                #endregion
             }
 
             if (DrawTask2)
